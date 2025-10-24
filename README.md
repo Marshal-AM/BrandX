@@ -49,6 +49,8 @@ Demo now at [https://brandx-loyalty.vercel.app](https://brandx-loyalty.vercel.ap
 
 ## Introduction
 
+BrandX is a place where businesses could simply hop in to grow their brands. 
+
 So, how do we do it? Well that’s quite simple, one of the methods we use is Loyalty programs, but wait don’t a bunch of businesses have loyalty programs? Let’s tell you why we are different. 
 
 Normally, businesses have something known as a loyalty program where a few people enroll to do tasks like joining a discord group, like a few posts on X and so on for a few rewards.
