@@ -232,114 +232,15 @@ export default function BusinessDashboard() {
           return
         }
 
-        // Step 1: Fetch user profile to get username
-        console.log('Fetching user profile for username...')
+        // DEMO MODE: ENS subdomain generation and verification disabled for easy demo by judges
+        // In production, this would generate and mint ENS subdomains for members
+        console.log('DEMO MODE: ENS subdomain generation bypassed - member will be added directly to contract')
         
-        const profileResponse = await fetch(`/api/user-profiles?wallet_address=${request.consumer_wallet_address}`)
-        const profileData = await profileResponse.json()
+        // Generate a simple ENS name for demo purposes (without actual minting)
+        const ensName = `member.${business.ens_domain || 'demo.eth'}`
+        console.log(`DEMO MODE: Using generated ENS name: ${ensName} for address: ${request.consumer_wallet_address}`)
         
-        if (!profileResponse.ok || !profileData.profile?.username) {
-          alert('User profile or username not found. User must complete their profile first.')
-          return
-        }
-        
-        if (!business.ens_domain) {
-          alert('Business ENS domain is required for member approval')
-          return
-        }
-        
-        // Step 2: Generate ENS name from username and business domain
-        const { generateENSSubdomain } = await import('@/lib/ens-utils')
-        const ensName = generateENSSubdomain(profileData.profile.username, business.ens_domain)
-        
-        console.log(`Generated ENS name: ${ensName} for address: ${request.consumer_wallet_address}`)
-        
-        // Step 3: First, prepare ENS subdomain minting transaction
-        console.log('Preparing ENS subdomain minting...')
-        
-        const ensResponse = await fetch('/api/ens/mint-subdomain', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            parentDomain: business.ens_domain,
-            subdomain: profileData.profile.username,
-            userAddress: request.consumer_wallet_address,
-            resolverAddress: ENS_RESOLVER_ADDRESS
-          })
-        })
-
-        const ensData = await ensResponse.json()
-        
-        if (!ensResponse.ok) {
-          console.error('ENS preparation error:', ensData)
-          alert(`Failed to prepare ENS subdomain: ${ensData.error}`)
-          return
-        }
-
-        // Step 4: Execute ENS transaction using Privy sendTransaction
-        console.log('Executing ENS transaction with Privy sendTransaction...')
-        
-        try {
-          // Import viem to encode the function call data
-          const { encodeFunctionData } = await import('viem')
-          
-          // Encode the function call data from the API response
-          const encodedData = encodeFunctionData({
-            abi: ensData.transactionData.abi,
-            functionName: ensData.transactionData.functionName,
-            args: ensData.transactionData.args
-          })
-
-          // Prepare transaction data for Privy
-          const transactionData = {
-            to: ensData.transactionData.to as `0x${string}`,
-            data: encodedData, // The encoded function call data
-            chainId: 11155111 // Sepolia chain ID
-          }
-
-          console.log('Sending transaction via Privy:', transactionData)
-
-          // Execute the ENS transaction using Privy's sendTransaction
-          const result = await sendTransaction({
-            to: transactionData.to,
-            data: transactionData.data,
-            chainId: transactionData.chainId // Sepolia chain ID as number
-          })
-
-          const hash = result.hash
-          console.log('ENS transaction hash:', hash)
-
-          // Step 5: Verify ENS subdomain was created
-          console.log('Verifying ENS subdomain...')
-          
-          const verifyResponse = await fetch('/api/ens/verify-subdomain', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              fullSubdomain: ensData.verificationData.fullSubdomain,
-              expectedOwner: ensData.verificationData.expectedOwner,
-              expectedResolver: ensData.verificationData.expectedResolver,
-              transactionHash: hash
-            })
-          })
-
-          const verifyData = await verifyResponse.json()
-          
-          if (!verifyResponse.ok || !verifyData.verified) {
-            console.error('ENS verification failed:', verifyData)
-            alert(`ENS subdomain creation failed verification: ${verifyData.message}`)
-            return
-          }
-
-          console.log('ENS subdomain verified successfully:', verifyData.subdomain)
-          
-        } catch (ensError: any) {
-          console.error('ENS transaction failed:', ensError)
-          alert(`Failed to mint ENS subdomain: ${ensError.message || 'Transaction failed'}`)
-          return
-        }
-        
-        // Step 6: Only after successful ENS minting, add member to contract
+        // Step 1: Add member directly to contract (bypassing ENS minting)
         console.log('Adding member to contract...')
         
         const contractResponse = await fetch('/api/contract/add-member', {
@@ -370,7 +271,7 @@ export default function BusinessDashboard() {
           console.log('Member added to contract successfully:', contractData.transactionHash)
         }
         
-        // Step 7: Update database record (after successful ENS + contract operations)
+        // Step 2: Update database record (after successful contract operations)
         console.log('Updating database record...')
       }
 
@@ -395,12 +296,7 @@ export default function BusinessDashboard() {
         ])
         
         if (action === 'approved') {
-          const request = loyaltyRequests.find(r => r.id === requestId)
-          const profileResponse = await fetch(`/api/user-profiles?wallet_address=${request?.consumer_wallet_address}`)
-          const profileData = await profileResponse.json()
-          const username = profileData.profile?.username || 'user'
-          
-          alert(`Request approved successfully! ENS subdomain ${username}.${business.ens_domain} minted and member added to loyalty program.`)
+          alert(`Request approved successfully! Member added to loyalty program. (DEMO MODE: ENS subdomain generation bypassed for easy demo)`)
         } else {
           alert(`Request ${action} successfully`)
         }
@@ -1024,6 +920,14 @@ export default function BusinessDashboard() {
                   <div className="text-white/60 text-sm">
                     Pending: {loyaltyRequests.filter(r => r.status === 'pending').length}
                   </div>
+                </div>
+                
+                {/* Demo Mode Notice */}
+                <div className="mb-6 inline-flex items-center gap-2 px-4 py-2 bg-blue-500/20 border border-blue-500/30 rounded-lg">
+                  <svg className="w-4 h-4 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                  </svg>
+                  <span className="text-blue-400 text-sm">DEMO MODE: ENS subdomain generation is disabled - members are added directly to contract</span>
                 </div>
                 
                 {requestsLoading ? (

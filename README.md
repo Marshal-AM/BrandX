@@ -1,6 +1,38 @@
 # BrandX
 A place where businesses could simply hop in to grow their brands. 
 
+## Demoing BrandX
+
+**IMPORTANT:** 
+We have disabled the ENS related features to allow any domain to onboard into our app for ease of testing for judges. Here are the relevant code files that have been modified:
+
+- **ENS Domain Migration Component**: [`frontend/src/components/ens-domain-migration.tsx`](frontend/src/components/ens-domain-migration.tsx) - ENS verification is bypassed and always returns true for demo purposes
+- **Business Dashboard Component**: [`frontend/src/app/business-dashboard/page.tsx`](frontend/src/app/business-dashboard/page.tsx) - ENS subdomain generation and verification is disabled, members are added directly to the contract
+
+- **AI Agent Analysis**: The AI agent analysis takes approximately **15 minutes on average**. This time is necessary for the agents to perform a thorough analysis across the entire internet, gathering comprehensive brand data from multiple sources.
+
+- **Contract Writes**: Contract writes take about **1-2 minutes each**. This is a temporary issue that Kadena is actively working to resolve.
+
+## STEPS TO DEMO BRANDX:
+
+### If you want to sign up as a new business:
+1. Login using Privy (you can use your Google account)
+2. Enter your domain (any test domain works, e.g., `apple.com`)
+3. Enter your business details (Please ensure it's a real and popular business for best results, try 'Apple')
+4. Wait for our AI agents to work their magic (usually takes about **15 minutes**)
+5. Select just **ONE BOUNTY** and delete all others (for fast deployment of the business contract)
+6. Wait for the business contract to be deployed (takes around **2 minutes**)
+7. You're in!
+
+### When you enter as a customer:
+1. Sign up with Privy
+2. Submit a request to the business you just created (Apple)
+3. Accept the request from your business dashboard by logging in as your business account
+4. Complete a bounty posted by the business and submit to AI
+5. If AI verifies it, you get your reward!
+
+Demo now at [https://brandx-loyalty.vercel.app](https://brandx-loyalty.vercel.app) !
+
 ## Table of Contents
 
 - [Introduction](#introduction)
@@ -388,18 +420,18 @@ Members can use their ENS subdomain across any ENS-compatible application while 
 **Offchain/L2 Resolver Contract**
 
 - Deployed Address: [`0x5824Ef215aC14955fD93e0C1E039596FDdb0514D` (Ethereum Sepolia)](https://sepolia.etherscan.io/address/0x5824Ef215aC14955fD93e0C1E039596FDdb0514D)
-- [GitHub File Link](https://github.com/SamFelix03/BrandX/blob/main/ENS-offchain-resolver/contracts/contracts/OffchainResolver.sol)
+- [GitHub File Link](https://github.com/Marshal-AM/BrandX/blob/main/ENS-offchain-resolver/contracts/contracts/OffchainResolver.sol)
 
 **CCIP-Read Gateway**
 - Hosted Link: [https://ccip-read-gateway.onrender.com](https://ccip-read-gateway.onrender.com)
-- [Server Implementation](https://github.com/SamFelix03/BrandX/tree/main/ENS-offchain-resolver/ccip-read-gateway/src)
+- [Server Implementation](https://github.com/Marshal-AM/BrandX/tree/main/ENS-offchain-resolver/ccip-read-gateway/src)
 
 **Documentation**
-- [Resolver and Gateway Docs](https://github.com/SamFelix03/BrandX/blob/main/ENS-offchain-resolver/README.md)
+- [Resolver and Gateway Docs](https://github.com/Marshal-AM/BrandX/blob/main/ENS-offchain-resolver/README.md)
 
 **ENS Client API Routes**
-- [API Routes](https://github.com/SamFelix03/BrandX/tree/main/frontend/src/app/api/ens)
-- [Client Documentation](https://github.com/SamFelix03/BrandX/blob/main/frontend/src/app/api/ens/README.md)
+- [API Routes](https://github.com/Marshal-AM/BrandX/tree/main/frontend/src/app/api/ens)
+- [Client Documentation](https://github.com/Marshal-AM/BrandX/blob/main/frontend/src/app/api/ens/README.md)
 
 ## Why Kadena [and line of code]
 
@@ -414,13 +446,13 @@ Basically, our platform is a very good use case for Kadena's RWA tokenization go
 ### Line of Code
 
 **BrandXFactory Contract**
-- [GitHub Contract File](https://github.com/SamFelix03/BrandX/blob/main/chainweb-contracts/contracts/BrandXFactory.sol)
+- [GitHub Contract File](https://github.com/Marshal-AM/BrandX/blob/main/chainweb-contracts/contracts/BrandXFactory.sol)
 
 **BusinessContract Logic**
-- [GitHub Contract File](https://github.com/SamFelix03/BrandX/blob/main/chainweb-contracts/contracts/BusinessContract.sol)
+- [GitHub Contract File](https://github.com/Marshal-AM/BrandX/blob/main/chainweb-contracts/contracts/BusinessContract.sol)
 
 **Smart Contract Documentation**
-- [Detailed Documentation](https://github.com/SamFelix03/BrandX/blob/main/chainweb-contracts/README.md)
+- [Detailed Documentation](https://github.com/Marshal-AM/BrandX/blob/main/chainweb-contracts/README.md)
 
 **Deployed Contract Addresses**
 
