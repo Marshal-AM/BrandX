@@ -28,30 +28,31 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Verify ENS ownership (required)
-    try {
-      const publicClient = createPublicClient({
-        chain: sepolia,
-        transport: http()
-      })
+    // DEMO MODE: ENS verification disabled for easy demo
+    // Verify ENS ownership (DISABLED)
+    // try {
+    //   const publicClient = createPublicClient({
+    //     chain: sepolia,
+    //     transport: http()
+    //   })
 
-      const resolvedAddress = await publicClient.getEnsAddress({
-        name: ens_domain
-      })
+    //   const resolvedAddress = await publicClient.getEnsAddress({
+    //     name: ens_domain
+    //   })
 
-      if (!resolvedAddress || resolvedAddress.toLowerCase() !== wallet_address.toLowerCase()) {
-        return NextResponse.json(
-          { error: 'ENS domain does not resolve to the connected wallet address' },
-          { status: 400 }
-        )
-      }
-    } catch (error) {
-      console.error('ENS verification error:', error)
-      return NextResponse.json(
-        { error: 'Failed to verify ENS domain ownership' },
-        { status: 400 }
-      )
-    }
+    //   if (!resolvedAddress || resolvedAddress.toLowerCase() !== wallet_address.toLowerCase()) {
+    //     return NextResponse.json(
+    //       { error: 'ENS domain does not resolve to the connected wallet address' },
+    //       { status: 400 }
+    //     )
+    //   }
+    // } catch (error) {
+    //   console.error('ENS verification error:', error)
+    //   return NextResponse.json(
+    //     { error: 'Failed to verify ENS domain ownership' },
+    //     { status: 400 }
+    //   )
+    // }
 
     const { data, error } = await supabase.rpc('insert_business_with_context', {
       p_wallet_address: wallet_address,
